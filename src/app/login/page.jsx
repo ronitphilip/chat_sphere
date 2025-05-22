@@ -6,8 +6,11 @@ import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { loginAPI, registerAPI } from '@/services/allAPI';
+import { useSocketContext } from '@/context/SocketContext';
 
 export default function Page() {
+
+  const { socket } = useSocketContext();
   const [isRegister, setIsRegister] = useState(false);
   const [userData, setUserData] = useState({
     name: '',
@@ -127,6 +130,9 @@ export default function Page() {
         sessionStorage.setItem('token', response.data.token);
         toast.success('Login successful!');
         router.push('/message');
+        if (socket && socket.connected) {
+          socket.emit('join', response.data?.user?.id);
+        }
       } else {
         toast.error('Invalid credentials');
       }
@@ -157,6 +163,9 @@ export default function Page() {
         sessionStorage.setItem('token', response.data.token);
         toast.success('Registration successful!');
         router.push('/message');
+        if (socket && socket.connected) {
+          socket.emit('join', response.data?.user?.id);
+        }
       } else {
         toast.error('Registration failed');
       }
@@ -272,21 +281,19 @@ export default function Page() {
         <div className="flex items-center space-x-4">
           <button
             onClick={handleRegister}
-            className={`${
-              isRegister
+            className={`${isRegister
                 ? 'text-purple-600 font-semibold py-3 px-6 rounded-2xl border'
                 : 'bg-purple-600 text-white font-semibold py-3 px-6 rounded-2xl hover:bg-purple-700 transition duration-300'
-            }`}
+              }`}
           >
             Register
           </button>
           <button
             onClick={handleLogin}
-            className={`${
-              isRegister
+            className={`${isRegister
                 ? 'bg-purple-600 text-white font-semibold py-3 px-6 rounded-2xl hover:bg-purple-700 transition duration-300'
                 : 'text-purple-600 font-semibold py-3 px-6 rounded-2xl border'
-            }`}
+              }`}
           >
             Sign In
           </button>

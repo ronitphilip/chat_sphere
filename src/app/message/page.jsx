@@ -39,7 +39,6 @@ export default function Message() {
                     user2: selectedUser.id,
                 };
                 const result = await fetchMessagesAPI(reqBody);
-                console.log(result.data);
 
                 if (result.status === 200) {
                     setMessages(result.data || []);

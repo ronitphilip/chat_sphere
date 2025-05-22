@@ -44,15 +44,7 @@ export const useSocket = (userId, events, currentChatId) => {
       socket.off("user_online");
       socket.off("user_offline");
     };
-  }, [
-    socket,
-    userId,
-    currentChatId,
-    events.onMessage,
-    events.onTyping,
-    events.onUserOnline,
-    events.onUserOffline,
-  ]);
+  }, [ socket, userId, currentChatId, events.onMessage, events.onTyping, events.onUserOnline, events.onUserOffline, ]);
 
   const sendMessage = useCallback(
     (receiverId, message) => {
